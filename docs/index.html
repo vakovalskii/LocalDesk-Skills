@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -299,7 +299,7 @@
     <div class="header">
         <div class="header-content">
             <h1>LocalDesk Skills Marketplace</h1>
-            <p>Проверенные навыки для Claude AI, оптимизированные для LocalDesk</p>
+            <p>Verified skills for Claude AI, optimized for LocalDesk</p>
         </div>
     </div>
 
@@ -307,25 +307,25 @@
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-number" id="total-skills">0</div>
-                <div class="stat-label">Всего навыков</div>
+                <div class="stat-label">Total Skills</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="total-categories">0</div>
-                <div class="stat-label">Категорий</div>
+                <div class="stat-label">Categories</div>
             </div>
         </div>
 
         <div class="filters">
             <div class="search-box">
-                <input type="text" id="search" placeholder="Поиск навыков...">
+                <input type="text" id="search" placeholder="Search skills...">
             </div>
             <div class="category-filter" id="categories">
-                <button class="filter-btn active" data-category="all">Все</button>
+                <button class="filter-btn active" data-category="all">All</button>
             </div>
         </div>
 
         <div class="skills-grid" id="skills-grid">
-            <div class="loading">Загрузка навыков...</div>
+            <div class="loading">Loading skills...</div>
         </div>
     </div>
 
@@ -339,27 +339,27 @@
         let allSkills = [];
         let categories = new Set();
 
-        // Категоризация скиллов
+        // Skill categorization
         const categoryMap = {
-            'algorithmic-art': 'Креатив',
-            'brand-guidelines': 'Дизайн',
-            'canvas-design': 'Дизайн',
-            'frontend-design': 'Разработка',
-            'doc-coauthoring': 'Документы',
-            'docx': 'Документы',
-            'pdf': 'Документы',
-            'pptx': 'Документы',
-            'xlsx': 'Документы',
-            'internal-comms': 'Коммуникация',
-            'mcp-builder': 'Разработка',
-            'skill-creator': 'Утилиты',
-            'slack-gif-creator': 'Коммуникация',
-            'theme-factory': 'Дизайн',
-            'web-artifacts-builder': 'Разработка',
-            'webapp-testing': 'Разработка'
+            'algorithmic-art': 'Creative',
+            'brand-guidelines': 'Design',
+            'canvas-design': 'Design',
+            'frontend-design': 'Development',
+            'doc-coauthoring': 'Documents',
+            'docx': 'Documents',
+            'pdf': 'Documents',
+            'pptx': 'Documents',
+            'xlsx': 'Documents',
+            'internal-comms': 'Communication',
+            'mcp-builder': 'Development',
+            'skill-creator': 'Utilities',
+            'slack-gif-creator': 'Communication',
+            'theme-factory': 'Design',
+            'web-artifacts-builder': 'Development',
+            'webapp-testing': 'Development'
         };
 
-        // Парсинг YAML frontmatter из SKILL.md
+        // Parse YAML frontmatter from SKILL.md
         function parseSkillMetadata(content) {
             const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---/;
             const match = content.match(frontmatterRegex);
@@ -382,36 +382,36 @@
             return metadata;
         }
 
-        // Загрузка списка скиллов из GitHub API
+        // Load skill list from GitHub API
         async function loadSkills() {
             try {
-                // Получаем список папок в директории skills
+                // Get list of folders in skills directory
                 const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${SKILLS_PATH}?ref=${BRANCH}`;
                 const response = await fetch(apiUrl);
                 const folders = await response.json();
                 
-                // Фильтруем только директории
+                // Filter only directories
                 const skillFolders = folders.filter(item => item.type === 'dir');
                 
-                // Загружаем метаданные для каждого скилла
+                // Load metadata for each skill
                 const skillPromises = skillFolders.map(async folder => {
                     try {
-                        // Загружаем SKILL.md
+                        // Load SKILL.md
                         const skillMdUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${BRANCH}/${SKILLS_PATH}/${folder.name}/SKILL.md`;
                         const skillResponse = await fetch(skillMdUrl);
                         const skillContent = await skillResponse.text();
                         
-                        // Парсим метаданные
+                        // Parse metadata
                         const metadata = parseSkillMetadata(skillContent);
                         
                         if (metadata) {
-                            const category = categoryMap[folder.name] || 'Другое';
+                            const category = categoryMap[folder.name] || 'Other';
                             categories.add(category);
                             
                             return {
                                 id: folder.name,
                                 name: metadata.name || folder.name,
-                                description: metadata.description || 'Описание отсутствует',
+                                description: metadata.description || 'No description available',
                                 category: category,
                                 license: metadata.license || '',
                                 repo: `https://github.com/${GITHUB_REPO}/tree/${BRANCH}/${SKILLS_PATH}/${folder.name}`,
@@ -419,7 +419,7 @@
                             };
                         }
                     } catch (error) {
-                        console.error(`Ошибка загрузки скилла ${folder.name}:`, error);
+                        console.error(`Error loading skill ${folder.name}:`, error);
                         return null;
                     }
                 });
@@ -427,25 +427,25 @@
                 const skills = await Promise.all(skillPromises);
                 allSkills = skills.filter(skill => skill !== null);
                 
-                // Обновляем UI
+                // Update UI
                 updateStats();
                 renderCategories();
                 renderSkills(allSkills);
                 
             } catch (error) {
-                console.error('Ошибка загрузки скиллов:', error);
+                console.error('Error loading skills:', error);
                 document.getElementById('skills-grid').innerHTML = 
-                    '<div class="no-results">Ошибка загрузки навыков. Проверьте подключение к интернету.</div>';
+                    '<div class="no-results">Error loading skills. Please check your internet connection.</div>';
             }
         }
 
-        // Обновление статистики
+        // Update statistics
         function updateStats() {
             document.getElementById('total-skills').textContent = allSkills.length;
             document.getElementById('total-categories').textContent = categories.size;
         }
 
-        // Рендеринг категорий
+        // Render categories
         function renderCategories() {
             const categoriesContainer = document.getElementById('categories');
             const allButton = categoriesContainer.querySelector('[data-category="all"]');
@@ -460,12 +460,12 @@
             });
         }
 
-        // Рендеринг скиллов
+        // Render skills
         function renderSkills(skills) {
             const grid = document.getElementById('skills-grid');
             
             if (skills.length === 0) {
-                grid.innerHTML = '<div class="no-results">Навыки не найдены</div>';
+                grid.innerHTML = '<div class="no-results">No skills found</div>';
                 return;
             }
             
@@ -482,15 +482,15 @@
                         ${skill.license ? `<span class="skill-tag">${skill.license}</span>` : ''}
                     </div>
                     <a href="${skill.repo}" target="_blank" class="skill-link">
-                        Открыть в GitHub →
+                        Open in GitHub →
                     </a>
                 </div>
             `).join('');
         }
 
-        // Фильтрация по категории
+        // Filter by category
         function filterByCategory(category) {
-            // Обновляем активную кнопку
+            // Update active button
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.category === category || (category === 'all' && btn.dataset.category === 'all')) {
@@ -498,7 +498,7 @@
                 }
             });
             
-            // Фильтруем скиллы
+            // Filter skills
             const filtered = category === 'all' 
                 ? allSkills 
                 : allSkills.filter(skill => skill.category === category);
@@ -506,7 +506,7 @@
             renderSkills(filtered);
         }
 
-        // Поиск
+        // Search
         document.getElementById('search').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             
@@ -519,12 +519,12 @@
             renderSkills(filtered);
         });
 
-        // Фильтр "Все"
+        // "All" filter
         document.querySelector('[data-category="all"]').addEventListener('click', () => {
             filterByCategory('all');
         });
 
-        // Загрузка при старте
+        // Load on startup
         loadSkills();
     </script>
 </body>

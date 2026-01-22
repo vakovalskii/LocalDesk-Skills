@@ -2,9 +2,9 @@
 
 # 🌟 LocalDesk Skills Marketplace
 
-**[🚀 Открыть маркетплейс →](https://vakovalskii.github.io/LocalDesk-Skills/)**
+**[🚀 Open Marketplace →](https://vakovalskii.github.io/LocalDesk-Skills/)**
 
-Интерактивный веб-маркетплейс проверенных навыков для Claude AI, оптимизированных для LocalDesk. Все навыки загружаются динамически, поддерживается поиск и фильтрация по категориям.
+Interactive web marketplace of verified skills for Claude AI, optimized for LocalDesk. All skills are loaded dynamically with search and category filtering support.
 
 ---
 
