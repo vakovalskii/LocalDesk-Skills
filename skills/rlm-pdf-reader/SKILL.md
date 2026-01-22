@@ -1,3 +1,9 @@
+---
+name: rlm-pdf-reader
+description: Recursive Language Model skill for reading and analyzing large PDF documents. Processes arbitrarily large PDFs through recursive decomposition and parallel sub-model calls, enabling Claude to handle documents that exceed context window limits.
+license: Apache 2.0
+---
+
 # RLM PDF Reader
 
 Recursive Language Model skill for reading and analyzing large PDF documents in Claude Code.
